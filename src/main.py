@@ -59,9 +59,22 @@ except OSError as e:
 ntptime.settime()
 
 
+def day_name(arg):
+    return {
+        0: "Senin",
+        1: "Selasa",
+        2: "Rabu",
+        3: "Kamis",
+        4: "Jumat",
+        5: "Sabtu",
+        6: "Minggu"
+    }.get(arg, None)
+
+
 def __time2str(dt_time: tuple):
-    return "{:04d}/{:02d}/{:02d} {:02d}:{:02d}:{:02d}".format(
-        dt_time[0], dt_time[1], dt_time[2], dt_time[3], dt_time[4], dt_time[5])
+    return "{}, {:04d}/{:02d}/{:02d} {:02d}:{:02d}:{:02d}".format(
+        day_name(dt_time[6]), dt_time[0], dt_time[1], dt_time[2], dt_time[3],
+        dt_time[4], dt_time[5])
 
 
 while True:
@@ -70,3 +83,4 @@ while True:
     boot.d.marquee("Smart Parking")
     boot.d.marquee("Politeknik Negeri Malang")
     boot.d.marquee(__time2str(NOW))
+    sleep(0.1)
