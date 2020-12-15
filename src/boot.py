@@ -15,8 +15,8 @@ password = "5m4rT_P4rk!Ng"
 gmt7 = 3600 * 7
 
 # local
-# mqtt_server = "192.168.0.103"
-mqtt_server = "raspberrypi.local"
+mqtt_server = "192.168.0.100"
+# mqtt_server = "raspberrypi.local"
 mqtt_port = 1883
 # public
 # mqtt_server = "parking.sinaungoding.com"

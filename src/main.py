@@ -9,18 +9,40 @@ import binascii
 import ntptime
 from umqttsimple import MQTTClient
 import ujson
+import machine
+
+info = ""
+
+
+class Kantong(object):
+    def __init__(self, id, tanggal, kode, nama, terisi, sisa, catat, *args,
+                 **kwargs):
+        self.id = id
+        self.tanggal = tanggal
+        self.kode = kode
+        self.nama = nama
+        self.terisi = terisi
+        self.sisa = sisa
+        self.catat = catat
 
 
 def sub_cb(topic, msg):
-    print((topic, msg))
-    print(msg.decode("utf-8"))
-    parsed = ujson.loads(msg.decode("utf-8"))
-    print("length {} data {}".format(len(parsed), parsed))
-    for data in parsed:
-        for key, value in data.items():
-            print("key: {} value: {}".format(key, value))
-    if topic == b'notification' and msg == b'received':
-        print('ESP received hello message')
+    try:
+        print((topic, msg))
+        print(msg.decode("utf-8"))
+        parsed = ujson.loads(msg.decode("utf-8"))
+        print("Length {} data {}".format(len(parsed), parsed))
+        global info
+        temp_info = ""
+        for data in parsed:
+            k = Kantong(**data)
+            print("object kantong {} kode {}".format(k, k.kode))
+            message = "{} terisi {} sisa {}".format(k.nama, k.terisi, k.sisa)
+            temp_info = temp_info + message
+        info = temp_info
+        print("info {}".format(info))
+    except OSError as e:
+        restart_and_reconnect()
 
 
 # MQTT
@@ -78,9 +100,17 @@ def __time2str(dt_time: tuple):
 
 
 while True:
-    tm = time()
-    NOW = localtime(tm + boot.gmt7)
-    boot.d.marquee("Smart Parking")
-    boot.d.marquee("Politeknik Negeri Malang")
-    boot.d.marquee(__time2str(NOW))
-    sleep(0.1)
+    try:
+        tm = time()
+        NOW = localtime(tm + boot.gmt7)
+
+        client.check_msg()
+
+        boot.d.marquee("Smart Parking")
+        boot.d.marquee("Politeknik Negeri Malang")
+        boot.d.marquee(__time2str(NOW))
+        if info is not None:
+            boot.d.marquee(info)
+        sleep(0.1)
+    except OSError as e:
+        restart_and_reconnect()
