@@ -23,6 +23,7 @@ mqtt_port = 1883
 # mqtt_port = 8095
 client_id = ubinascii.hexlify(machine.unique_id())
 topic_sub = "parkir/rekap"
+topic_pub = "parkir/ack"
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)

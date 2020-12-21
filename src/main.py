@@ -99,13 +99,17 @@ def __time2str(dt_time: tuple):
         dt_time[4], dt_time[5])
 
 
+# intial rekap
+print("send ack")
+client.publish(topic=boot.topic_pub, msg="ACK")
+
 while True:
     try:
         tm = time()
         NOW = localtime(tm + boot.gmt7)
 
         client.check_msg()
-
+    
         boot.d.marquee("Smart Parking")
         boot.d.marquee("Politeknik Negeri Malang")
         boot.d.marquee(__time2str(NOW))
